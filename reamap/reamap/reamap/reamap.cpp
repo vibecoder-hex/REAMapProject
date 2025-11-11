@@ -31,9 +31,7 @@ public:
 		adj_list[y].push_back(x);
 	}
 
-    std::map<T, std::list<T>> get_data() {
-        return adj_list;
-    }
+    std::map<T, std::list<T>> get_data() { return adj_list; }
 
 	std::vector<T> get_shortest_path(T start, T target) {
 
@@ -63,10 +61,23 @@ public:
 		}
 		return {};
 	}
+    
 };
 
-void print_graph(Graph<char> graph) {
-    std::map<char, std::list<char>> graph_data = graph.get_data();
+template<typename T>
+void write_graph(Graph<T>& graph, int edge_count) {
+    for (int i = 0; i < edge_count; i++) {
+        T source_vertex, target_vertex;
+        std::cout << i+1 << " source "; std::cin >> source_vertex;
+        std::cout << i+1 << " target "; std::cin >> target_vertex;
+        std::cout << std::endl;
+        graph.add_edge(source_vertex, target_vertex);
+    }
+}
+
+template<typename T>
+void print_graph(Graph<T>& graph) {
+    std::map<T, std::list<T>> graph_data = graph.get_data();
     for (auto [vertex, neighbors]: graph_data) {
         std::cout << vertex << " : " << "[ ";
         for (char neighbor: neighbors) {
@@ -76,24 +87,26 @@ void print_graph(Graph<char> graph) {
     }
 }
 
-void print_shortest_path(Graph<char> graph) {
-    std::vector<char> shortest_path = graph.get_shortest_path('A', 'F');
-    for (char elem: shortest_path) {
+template<typename T>
+void print_shortest_path(Graph<T>& graph, T start, T target) {
+    std::vector<T> shortest_path = graph.get_shortest_path(start, target);
+    for (T elem: shortest_path)
         std::cout << elem << " ";
-    }
 }
 
 int main() {
 	Graph<char> graph;
-	graph.add_edge('A', 'B');
-	graph.add_edge('A', 'E');
-	graph.add_edge('A', 'D');
-	graph.add_edge('B', 'E');
-	graph.add_edge('B', 'C');
-	graph.add_edge('C', 'F');
-	graph.add_edge('F', 'E');
+    
+    int edge_count;
+    std::cout << "edge count: "; std::cin >> edge_count;
+    write_graph(graph, edge_count);
+    
     print_graph(graph);
     std::cout << std::endl;
-    print_shortest_path(graph);
+    
+    char start, target;
+    std::cout << "Vertexes for shortest path(\"start\" then \"target\"" << std::endl;
+    std::cin >> start >> target;
+    print_shortest_path(graph, start, target);
     std::cout << std::endl;
 }
