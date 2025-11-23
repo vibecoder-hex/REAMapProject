@@ -98,13 +98,5 @@ form.onsubmit = async (event) => {
             selectedVertexes.target
         ]
     };
-    const response = await fetch("http://localhost:18080/get_shortest_path", {
-        method: "POST",
-        body: JSON.stringify(bodyParams),
-        headers: {
-            "Content-Type": "application/json",  // ✅ Обязательно!
-        },
-    });
-    const json = await response.json();
-    console.log(json);
+    console.log(bodyParams);
 }

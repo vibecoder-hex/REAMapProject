@@ -1,40 +1,40 @@
-#include "include/crow.h"
-#include "graph.h"
 #include <iostream>
 
-std::map<std::string, std::vector<std::string>> graph_map(const crow::json::rvalue& graph_json) {
-    std::map<std::string, std::vector<std::string>> adj_list;
-    for (const auto& edges: graph_json["graph"].keys()) {
-        auto neighbors = graph_json["graph"][edges].lo();
-        std::vector<std::string> neighbors_array;
-        for (const auto& neighbor: neighbors) {
-            neighbors_array.push_back(neighbor.s());
-        }
-        adj_list[edges] = neighbors_array;
-    }
-    return adj_list;
-}
+#include "httplib.h"
+#include "graph.hpp"
+#include "nlohmann/json.hpp"
 
-crow::json::wvalue json_shortest_path(Graph<std::string>& graph, const crow::json::rvalue& graph_json) {
-    crow::json::wvalue response_json;
-    auto selected_edges = graph_json["edges"].lo();
-    std::string start = selected_edges[0].s();
-    std::string target = selected_edges[1].s();
-    response_json["shortest_path"] = graph.get_shortest_path(start, target);
-    return response_json;
+std::map<std::string, std::vector<std::string>> get_graph_structure() {
+    std::map<std::string, std::vector<std::string>> adj_list;
+    adj_list = {
+        {"A", {"B", "C"}},
+        {"B", {"A", "C"}},
+        {"C", {"A", "B"}},
+    };
+    return adj_list;
+
 }
 
 int main() {
-    crow::SimpleApp app;
-    CROW_ROUTE(app, "/get_shortest_path").methods("POST"_method)
-    ([](const crow::request& request) {
-        auto graph_json = crow::json::load(request.body);
+    httplib::Server svr;
 
-        auto graph_struct = graph_map(graph_json);
+    svr.Get("/", [](const httplib::Request&, httplib::Response &res){
+        nlohmann::json json;
+
+        auto graph_struct = get_graph_structure();
         Graph<std::string> graph(graph_struct);
-        auto response = json_shortest_path(graph, graph_json);
-        return crow::response(response);
+        auto path = graph.get_shortest_path("A", "C");
+
+        json["graph"] = graph_struct;
+        json["shortest_path"] = path;
+
+        res.set_content(json.dump(), "application/json");
     });
 
-    app.port(18080).multithreaded().run();
+    std::string host = "0.0.0.0";
+    int port = 8080;
+
+    std::cout << "Server is running on: " << host << ":" << port << std::endl;
+
+    svr.listen(host, port);
 }

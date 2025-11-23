@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,6 @@
     <br>
     <input type="text" placeholder="Enter edge count" id="edgeCount"><br><br>
     <input type="button" value="OK" id="okBtn" onclick="generateEdgeFields(edgeCount.value)">
-    <script src="index.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>
