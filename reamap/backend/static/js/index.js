@@ -93,10 +93,20 @@ form.onsubmit = async (event) => {
     selectedVertexes = getShortestPathFormField();
     const bodyParams = {
         "graph": Object.fromEntries(graph.adjacencyList),
-        "edges": [
+        "selected_vertexes": [
             selectedVertexes.source,
             selectedVertexes.target
         ]
     };
     console.log(bodyParams);
+
+    const response = await fetch("http://localhost:8080/get_shortest_path", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(bodyParams)
+    });
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
 }
