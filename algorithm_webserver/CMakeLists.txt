@@ -10,12 +10,13 @@ set(BOOST_ROOT "C:/Users/rtyse/Downloads/boost_1_89_0-bin-msvc-all-32-64/boost_1
 find_package(Boost REQUIRED)
 
 # Включение директорий
-include_directories(include ${Boost_INCLUDE_DIRS})
+include_directories(../include ${Boost_INCLUDE_DIRS})
 
 # Добавление исполняемого файла
 add_executable(${PROJECT_NAME}
         graph.hpp
-        main.cpp)
+        main.cpp
+)
 
 # Связывание с Boost библиотеками
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
