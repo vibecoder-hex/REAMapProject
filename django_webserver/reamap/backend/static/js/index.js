@@ -98,7 +98,7 @@ form.onsubmit = async (event) => {
         ]
     };
 
-    const response = await fetch("http://localhost:8080/get_shortest_path", {
+    const response = await fetch("http://127.0.0.1:8080/get_shortest_path", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
