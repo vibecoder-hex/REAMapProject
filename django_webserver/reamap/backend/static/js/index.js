@@ -85,7 +85,6 @@ const getShortestPathFormField = () => {
     }
     return null;
 }
-
 form.onsubmit = async (event) => {
     event.preventDefault();
     const graph = new Graph();
@@ -98,7 +97,6 @@ form.onsubmit = async (event) => {
             selectedVertexes.target
         ]
     };
-    console.log(bodyParams);
 
     const response = await fetch("http://localhost:8080/get_shortest_path", {
         method: "POST",
@@ -108,5 +106,13 @@ form.onsubmit = async (event) => {
         body: JSON.stringify(bodyParams)
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
+    
+    showShortestPath(jsonResponse);
+}
+
+const showShortestPath = (jsonResponse) => {
+    const resultDiv = document.createElement("div");
+    const shortestPathString = jsonResponse.shortest_path.join("->");
+    resultDiv.innerHTML = `<h3>Shortest Path is: ${shortestPathString}</h3>`;
+    document.body.append(resultDiv);
 }
