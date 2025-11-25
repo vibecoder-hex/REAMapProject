@@ -111,8 +111,11 @@ form.onsubmit = async (event) => {
 }
 
 const showShortestPath = (jsonResponse) => {
-    const resultDiv = document.createElement("div");
-    const shortestPathString = jsonResponse.shortest_path.join("->");
-    resultDiv.innerHTML = `<h3>Shortest Path is: ${shortestPathString}</h3>`;
-    document.body.append(resultDiv);
+    const resultDiv = document.getElementById("resultDiv");
+    if (!jsonResponse.shortest_path) {
+        resultDiv.innerHTML = "<h3>Shortest path not found</h3>";
+        return;
+    }
+    const shortestPathString = jsonResponse.shortest_path.join(" -> ");
+    resultDiv.innerHTML = `<h3>Shortest path is ${shortestPathString}</h3>`;
 }
